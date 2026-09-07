@@ -8,6 +8,7 @@ import { buildHandoffSummary } from './handoff'
 import { logAiUsage } from './usage'
 import { latestUserMessage } from './query'
 import { engineSendText } from '@/lib/flows/meta-send'
+import { sendSocialTextToConversation } from '@/lib/social/send-message'
 import { checkRateLimit, RATE_LIMITS } from '@/lib/rate-limit'
 
 interface DispatchArgs {
@@ -18,6 +19,7 @@ interface DispatchArgs {
   /** The account's WhatsApp config owner, used for the outbound send's
    *  audit columns (mirrors how the flow runner passes it through). */
   configOwnerUserId: string
+  channel?: 'whatsapp' | 'instagram' | 'messenger'
 }
 
 /**
@@ -69,7 +71,7 @@ export async function dispatchInboundToAiReply(
 
     const { data: conv, error: convErr } = await db
       .from('conversations')
-      .select('assigned_agent_id, ai_autoreply_disabled, ai_reply_count')
+      .select('assigned_agent_id, ai_autoreply_disabled, ai_reply_count, channel')
       .eq('id', conversationId)
       .maybeSingle()
     if (convErr || !conv) return
@@ -179,14 +181,12 @@ export async function dispatchInboundToAiReply(
     }
     if (claimed !== true) return // lost the per-conversation cap race
 
-    await engineSendText({
-      accountId,
-      userId: configOwnerUserId,
-      conversationId,
-      contactId,
-      text,
-      aiGenerated: true,
-    })
+    const channel = args.channel ?? conv.channel ?? 'whatsapp'
+    if (channel === 'whatsapp') {
+      await engineSendText({ accountId, userId: configOwnerUserId, conversationId, contactId, text, aiGenerated: true })
+    } else {
+      await sendSocialTextToConversation({ accountId, conversationId, text, senderType: 'bot', aiGenerated: true })
+    }
   } catch (err) {
     console.error('[ai auto-reply] dispatch failed:', err)
   }

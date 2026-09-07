@@ -31,6 +31,11 @@ interface WhatsAppStatus {
   connected: boolean;
 }
 
+interface SocialStatus {
+  configured: boolean;
+  connected: boolean;
+}
+
 export function SettingsOverview({
   onSelect,
 }: {
@@ -51,6 +56,7 @@ export function SettingsOverview({
   // from blanking the rest of the landing.
   const [whatsapp, setWhatsapp] = useState<WhatsAppStatus | null>(null);
   const [whatsappLoading, setWhatsappLoading] = useState(true);
+  const [social, setSocial] = useState<Record<'instagram' | 'messenger', SocialStatus> | null>(null);
 
   useEffect(() => {
     if (!user || !accountId) return;
@@ -117,6 +123,26 @@ export function SettingsOverview({
       setCountsLoading(false);
     })();
 
+    // Social channels expose their saved connection state through the same
+    // account-scoped API used by their settings panels.
+    (async () => {
+      const [instagram, messenger] = await Promise.allSettled([
+        fetch('/api/social/config?channel=instagram', { cache: 'no-store' }).then((r) => r.json()),
+        fetch('/api/social/config?channel=messenger', { cache: 'no-store' }).then((r) => r.json()),
+      ]);
+      if (cancelled) return;
+      setSocial({
+        instagram: {
+          configured: instagram.status === 'fulfilled' && !!instagram.value?.page_id,
+          connected: instagram.status === 'fulfilled' && instagram.value?.status === 'connected',
+        },
+        messenger: {
+          configured: messenger.status === 'fulfilled' && !!messenger.value?.page_id,
+          connected: messenger.status === 'fulfilled' && messenger.value?.status === 'connected',
+        },
+      });
+    })();
+
     // WhatsApp connection status — slower, independent.
     (async () => {
       setWhatsappLoading(true);
@@ -154,11 +180,14 @@ export function SettingsOverview({
   // Per-tile loading + subtitle. `null` counts render as a graceful
   // fallback so a single failed query never blanks a tile.
   const tiles: {
+    key: string;
     section: SettingsSection;
+    title?: string;
     loading: boolean;
     subtitle: ReactNode;
   }[] = [
     {
+      key: 'whatsapp',
       section: 'whatsapp',
       loading: whatsappLoading,
       subtitle: !whatsapp?.configured ? (
@@ -174,6 +203,21 @@ export function SettingsOverview({
       ),
     },
     {
+      key: 'instagram',
+      section: 'social',
+      title: t('instagram'),
+      loading: social === null,
+      subtitle: !social?.instagram.configured ? t('notSetup') : social.instagram.connected ? <><StatusDot tone="ok" /> {t('connected')}</> : <><StatusDot tone="muted" /> {t('needsReconnecting')}</>,
+    },
+    {
+      key: 'messenger',
+      section: 'social',
+      title: t('messenger'),
+      loading: social === null,
+      subtitle: !social?.messenger.configured ? t('notSetup') : social.messenger.connected ? <><StatusDot tone="ok" /> {t('connected')}</> : <><StatusDot tone="muted" /> {t('needsReconnecting')}</>,
+    },
+    {
+      key: 'members',
       section: 'members',
       loading: countsLoading,
       subtitle:
@@ -186,6 +230,7 @@ export function SettingsOverview({
             }`,
     },
     {
+      key: 'templates',
       section: 'templates',
       loading: countsLoading,
       subtitle:
@@ -198,11 +243,13 @@ export function SettingsOverview({
             }`,
     },
     {
+      key: 'deals',
       section: 'deals',
       loading: false,
       subtitle: `${defaultCurrency} — ${currencyLabel}`,
     },
     {
+      key: 'fields',
       section: 'fields',
       loading: countsLoading,
       subtitle:
@@ -213,6 +260,7 @@ export function SettingsOverview({
             })}`,
     },
     {
+      key: 'appearance',
       section: 'appearance',
       loading: false,
       subtitle: t('appearance', { mode: cap(mode), theme: themeName }),
@@ -251,12 +299,12 @@ export function SettingsOverview({
 
       {/* Status tiles */}
       <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-        {tiles.map(({ section, loading, subtitle }) => {
+        {tiles.map(({ key, section, title, loading, subtitle }) => {
           const meta = SECTION_META[section];
           const Icon = meta.icon;
           return (
             <button
-              key={section}
+              key={key}
               type="button"
               onClick={() => onSelect(section)}
               className={cn(
@@ -269,7 +317,7 @@ export function SettingsOverview({
               </span>
               <span className="min-w-0 flex-1">
                 <span className="block text-sm font-semibold text-foreground">
-                  {tSections(section)}
+                  {title ?? tSections(section)}
                 </span>
                 <span className="mt-0.5 flex items-center gap-1.5 text-xs text-muted-foreground">
                   {loading ? (

@@ -156,6 +156,7 @@ export interface ContactNote {
 }
 
 export type ConversationStatus = 'open' | 'pending' | 'closed';
+export type ConversationChannel = 'whatsapp' | 'instagram' | 'messenger';
 
 export interface Conversation {
   id: string;
@@ -168,6 +169,8 @@ export interface Conversation {
   unread_count: number;
   created_at: string;
   updated_at: string;
+  channel?: ConversationChannel;
+  external_contact_id?: string | null;
   contact?: Contact;
   /**
    * AI auto-reply state for this thread (migration 029 + 033):
