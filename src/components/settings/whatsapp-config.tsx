@@ -92,6 +92,7 @@ export function WhatsAppConfig() {
   // Meta will silently drop every inbound event — that's the
   // multi-number bug that prompted this work.
   const isRegistered = Boolean(config?.registered_at);
+  const wabaSubscriptionSucceeded = Boolean(config?.subscribed_apps_at);
   const lastRegistrationError = config?.last_registration_error ?? null;
 
   const [verifyingRegistration, setVerifyingRegistration] = useState(false);
@@ -503,26 +504,31 @@ export function WhatsAppConfig() {
         {config && (
           <Alert
             className={
-              isRegistered
+              isRegistered || wabaSubscriptionSucceeded
                 ? 'bg-emerald-950/30 border-emerald-700/50'
                 : 'bg-amber-950/30 border-amber-700/50'
             }
           >
             <div className="flex items-center justify-between gap-2 flex-wrap">
               <div className="flex items-center gap-2">
-                {isRegistered ? (
+                {isRegistered || wabaSubscriptionSucceeded ? (
                   <CheckCircle2 className="size-4 text-emerald-400" />
                 ) : (
                   <AlertTriangle className="size-4 text-amber-400" />
                 )}
                 <AlertTitle
                   className={
-                    'mb-0 ' + (isRegistered ? 'text-emerald-200' : 'text-amber-200')
+                    'mb-0 ' +
+                    (isRegistered || wabaSubscriptionSucceeded
+                      ? 'text-emerald-200'
+                      : 'text-amber-200')
                   }
                 >
                   {isRegistered
                     ? t('registered')
-                    : t('notRegistered')}
+                    : wabaSubscriptionSucceeded
+                      ? t('testNumberConfigured')
+                      : t('notRegistered')}
                 </AlertTitle>
               </div>
               <Button
@@ -551,6 +557,8 @@ export function WhatsAppConfig() {
                     }),
                   }}
                 />
+              ) : wabaSubscriptionSucceeded && !lastRegistrationError ? (
+                <>{t('registrationNotConfirmedHint')}</>
               ) : lastRegistrationError ? (
                 <>
                   {t('lastAttemptFailed')}

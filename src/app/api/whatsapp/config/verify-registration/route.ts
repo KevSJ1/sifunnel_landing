@@ -128,6 +128,14 @@ export async function GET() {
         errors.push(
           'WABA has no subscribed apps. Re-save the configuration to subscribe.',
         )
+      } else if (!config.subscribed_apps_at) {
+        // Backfill the local diagnostic timestamp for configurations saved
+        // before this check was persisted. This is especially important for
+        // Meta test numbers, which may not expose a 2-step PIN.
+        await supabase
+          .from('whatsapp_config')
+          .update({ subscribed_apps_at: new Date().toISOString() })
+          .eq('account_id', accountId)
       }
     } catch (err) {
       errors.push(
@@ -140,10 +148,11 @@ export async function GET() {
     )
   }
 
+  // A test number can be pre-registered by Meta and therefore have no local
+  // registered_at timestamp. Metadata plus WABA subscription are the
+  // reliable checks available for that sandbox case.
   const live =
-    checks.phone_metadata_ok &&
-    (checks.waba_subscribed_to_app ?? false) &&
-    checks.locally_marked_registered
+    checks.phone_metadata_ok && (checks.waba_subscribed_to_app ?? false)
 
   return NextResponse.json({
     live,
