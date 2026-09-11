@@ -334,6 +334,7 @@ export async function POST(request: Request) {
     // Skipped only when there's no waba_id (legacy rows from before
     // we required it).
     let subscribedAppsAt: string | null = null
+    let subscriptionError: string | null = null
     if (waba_id) {
       try {
         await subscribeWabaToApp({
@@ -344,9 +345,7 @@ export async function POST(request: Request) {
       } catch (err) {
         const message = err instanceof Error ? err.message : String(err)
         console.warn('WABA subscribed_apps failed (non-fatal):', message)
-        // Subscription failures are rare once the App has the right
-        // permissions; we don't block save on them — the diagnostic
-        // endpoint surfaces this state too.
+        subscriptionError = message
       }
     }
 
@@ -358,11 +357,12 @@ export async function POST(request: Request) {
       waba_id: waba_id || null,
       access_token: encryptedAccessToken,
       verify_token: encryptedVerifyToken,
-      status: registrationError ? 'disconnected' : 'connected',
-      connected_at: registrationError ? null : new Date().toISOString(),
-      registered_at: registrationError ? null : registeredAt,
+      status: registrationError || subscriptionError ? 'disconnected' : 'connected',
+      connected_at:
+        registrationError || subscriptionError ? null : new Date().toISOString(),
+      registered_at: registrationError || subscriptionError ? null : registeredAt,
       subscribed_apps_at: subscribedAppsAt ?? null,
-      last_registration_error: registrationError,
+      last_registration_error: registrationError ?? subscriptionError,
       updated_at: new Date().toISOString(),
     }
 
@@ -401,7 +401,7 @@ export async function POST(request: Request) {
       }
     }
 
-    if (registrationError) {
+    if (registrationError || subscriptionError) {
       // Save succeeded but the number isn't actually live. Return
       // 200 with a structured error so the UI can show the specific
       // remediation step instead of a generic toast.
@@ -409,7 +409,7 @@ export async function POST(request: Request) {
         success: false,
         saved: true,
         registered: false,
-        registration_error: registrationError,
+        registration_error: registrationError ?? subscriptionError,
         phone_info: phoneInfo,
       })
     }
