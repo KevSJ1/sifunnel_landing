@@ -1,0 +1,121 @@
+---
+import Icon from './Icon.astro';
+import { selector, wa } from '../data/site';
+---
+<section id="por-donde-empiezo" class="section" data-section="selector" aria-labelledby="selector-title">
+  <div class="container">
+    <div class="section-head section-head--center reveal">
+      <p class="eyebrow">¿Por dónde empiezo?</p>
+      <h2 id="selector-title" class="h2">Dinos tu mayor problema y te decimos por dónde empezar.</h2>
+    </div>
+
+    <div class="selector reveal reveal--scale" data-selector>
+      <div class="options" role="tablist" aria-label="Elige tu mayor problema">
+        {selector.map((o, i) => (
+          <button
+            type="button"
+            role="tab"
+            id={`sel-tab-${i}`}
+            aria-controls={`sel-panel-${i}`}
+            aria-selected={i === 0 ? 'true' : 'false'}
+            tabindex={i === 0 ? 0 : -1}
+            class="opt"
+          >
+            <span class="opt-n">{String(i + 1).padStart(2, '0')}</span>
+            <span>“{o.problem}”</span>
+          </button>
+        ))}
+      </div>
+
+      <div class="panels">
+        {selector.map((o, i) => (
+          <div class="panel" role="tabpanel" id={`sel-panel-${i}`} aria-labelledby={`sel-tab-${i}`} hidden={i !== 0}>
+            <p class="panel-label">Empieza por</p>
+            <p class="panel-start">{o.start}</p>
+            <p class="muted">{o.why}</p>
+            <a class="btn btn-wa" href={wa(o.msg)} target="_blank" rel="noopener" data-wa data-service={`selector-${i + 1}`}>
+              <Icon name="whatsapp" /> <span>Quiero empezar por aquí</span>
+            </a>
+          </div>
+        ))}
+        <p class="micro">¿Más de uno? Es normal. En el diagnóstico los ordenamos por impacto.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .selector {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+    padding: clamp(14px, 2vw, 20px);
+    border-radius: var(--radius-xl);
+    background: var(--surface-lowest);
+    border: 1px solid rgba(72, 69, 85, 0.7);
+  }
+  .options { display: grid; gap: 8px; align-content: start; }
+  .opt {
+    display: flex; align-items: center; gap: 14px; text-align: left;
+    padding: 16px 18px; border-radius: var(--radius-md);
+    background: var(--surface-low); border: 1px solid transparent;
+    font: 600 1rem var(--font-display); color: var(--on-surface-variant);
+    transition: background-color 0.3s, border-color 0.3s, color 0.3s, transform 0.4s var(--ease-spring);
+  }
+  .opt:hover { background: var(--surface-high); color: var(--on-surface); transform: translateX(4px); }
+  .opt[aria-selected='true'] {
+    background: var(--surface-highest); color: var(--on-surface);
+    border-color: var(--primary-container);
+    box-shadow: inset 3px 0 0 var(--primary);
+  }
+  .opt-n { font-size: 0.8rem; color: var(--outline); font-variant-numeric: tabular-nums; }
+  .opt[aria-selected='true'] .opt-n { color: var(--primary); }
+
+  .panels {
+    position: relative;
+    display: flex; flex-direction: column;
+    padding: clamp(22px, 3vw, 36px);
+    border-radius: var(--radius-lg);
+    background:
+      radial-gradient(120% 80% at 100% 0%, rgba(148, 125, 255, 0.18), transparent 60%),
+      var(--surface-c);
+    border: 1px solid rgba(202, 190, 255, 0.18);
+  }
+  .panel[hidden] { display: none; }
+  .panel { display: flex; flex-direction: column; gap: 14px; align-items: flex-start; animation: panel-in 0.55s var(--ease-out); }
+  @keyframes panel-in { from { opacity: 0; transform: translateY(12px); } }
+  .panel-label { font: 700 0.8rem var(--font-body); letter-spacing: 0.08em; text-transform: uppercase; color: var(--secondary); }
+  .panel-start { font: 700 clamp(1.4rem, 1.1rem + 1.4vw, 2rem) / 1.25 var(--font-display); color: var(--on-surface); text-wrap: balance; }
+  .panel .btn { margin-top: 10px; }
+  .micro { margin-top: auto; padding-top: 24px; font-size: 0.88rem; color: var(--outline); }
+
+  @media (max-width: 860px) {
+    .selector { grid-template-columns: 1fr; }
+    .panel .btn { width: 100%; }
+  }
+</style>
+
+<script>
+  const root = document.querySelector('[data-selector]');
+  if (root) {
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+    const panels = [...root.querySelectorAll<HTMLElement>('[role="tabpanel"]')];
+    const select = (idx: number, focus = false) => {
+      tabs.forEach((t, i) => {
+        const on = i === idx;
+        t.setAttribute('aria-selected', String(on));
+        t.tabIndex = on ? 0 : -1;
+        panels[i].hidden = !on;
+      });
+      if (focus) tabs[idx].focus();
+    };
+    tabs.forEach((t, i) => {
+      t.addEventListener('click', () => select(i));
+      t.addEventListener('keydown', (e) => {
+        const k = e.key;
+        if (k === 'ArrowDown' || k === 'ArrowRight') { e.preventDefault(); select((i + 1) % tabs.length, true); }
+        if (k === 'ArrowUp' || k === 'ArrowLeft') { e.preventDefault(); select((i - 1 + tabs.length) % tabs.length, true); }
+        if (k === 'Home') { e.preventDefault(); select(0, true); }
+        if (k === 'End') { e.preventDefault(); select(tabs.length - 1, true); }
+      });
+    });
+  }
+</script>

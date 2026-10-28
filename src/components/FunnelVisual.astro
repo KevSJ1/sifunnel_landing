@@ -1,0 +1,241 @@
+---
+/** Diagrama animado del embudo: canales → 4 etapas → WhatsApp → venta. Solo CSS/SVG, sin librerías. */
+const bands = [
+  { d: 'M60 110 L420 110 L387.7 163 L92.3 163 Z', label: '1 · ATRAER', y: 141, color: '#1067f5', text: '#fff' },
+  { d: 'M95.9 169 L384.1 169 L351.8 222 L128.2 222 Z', label: '2 · CONVENCER', y: 200, color: '#0bb3b0', text: '#05201f' },
+  { d: 'M131.8 228 L348.2 228 L315.9 281 L164.1 281 Z', label: '3 · CONVERTIR', y: 259, color: '#fd6550', text: '#2a0a05' },
+  { d: 'M167.7 287 L312.3 287 L280 340 L200 340 Z', label: '4 · MEDIR', y: 318, color: '#f9b908', text: '#2a1c00' },
+];
+const sources = [
+  { x: 30, label: 'Google' },
+  { x: 180, label: 'Instagram' },
+  { x: 330, label: 'Anuncios' },
+];
+const flows = [
+  'M90 82 C 90 130, 200 140, 225 200 S 240 300, 240 372',
+  'M240 82 C 240 140, 240 200, 240 260 S 240 330, 240 372',
+  'M390 82 C 390 130, 280 140, 255 200 S 240 300, 240 372',
+];
+---
+<div class="fv" data-tilt>
+  <div class="fv-card">
+    <svg viewBox="0 0 480 520" role="img" aria-labelledby="fv-title" class="fv-svg">
+      <title id="fv-title">Embudo SiFunnel: Google, Instagram y anuncios llevan clientes por las etapas atraer, convencer, convertir y medir, hasta una conversación de WhatsApp que termina en venta.</title>
+      <defs>
+        <radialGradient id="fv-dot" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#fff" />
+          <stop offset="45%" stop-color="#cabeff" />
+          <stop offset="100%" stop-color="#947dff" stop-opacity="0" />
+        </radialGradient>
+        <linearGradient id="fv-flow" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#947dff" stop-opacity="0.05" />
+          <stop offset="100%" stop-color="#947dff" stop-opacity="0.45" />
+        </linearGradient>
+      </defs>
+
+      <!-- Canales de entrada -->
+      {sources.map((s, i) => (
+        <g class="fv-source" style={`--i:${i}`}>
+          <rect x={s.x} y="40" width="120" height="42" rx="21" fill="#19202e" stroke="#484555" />
+          <circle cx={s.x + 22} cy="61" r="5" fill="#41e575" class="fv-live" />
+          <text x={s.x + 36} y="66" class="fv-chip">{s.label}</text>
+        </g>
+      ))}
+
+      <!-- Trazos de flujo -->
+      {flows.map((d) => <path d={d} fill="none" stroke="url(#fv-flow)" stroke-width="1.5" stroke-dasharray="4 6" class="fv-dash" />)}
+
+      <!-- Embudo -->
+      <g class="fv-funnel">
+        {bands.map((b, i) => (
+          <g class="fv-band" style={`--i:${i}`}>
+            <path d={b.d} fill={b.color} />
+            <path d={b.d} fill="#fff" class="fv-glow" />
+            <text x="240" y={b.y} text-anchor="middle" class="fv-label" fill={b.text}>{b.label}</text>
+          </g>
+        ))}
+      </g>
+
+      <!-- Partículas: clientes recorriendo el embudo -->
+      {flows.map((d, i) =>
+        [0, 1].map((k) => (
+          <circle r="6" fill="url(#fv-dot)" class="fv-particle">
+            <animateMotion dur="3.6s" begin={`${i * 0.55 + k * 1.8}s`} repeatCount="indefinite" path={d} keyPoints="0;1" keyTimes="0;1" calcMode="spline" keySplines="0.4 0 0.2 1" />
+            <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.85;1" dur="3.6s" begin={`${i * 0.55 + k * 1.8}s`} repeatCount="indefinite" />
+          </circle>
+        ))
+      )}
+
+      <!-- WhatsApp -->
+      <g class="fv-chat">
+        <rect x="56" y="372" width="368" height="134" rx="18" fill="#151b2a" stroke="#2e3544" />
+        <circle cx="82" cy="396" r="11" fill="#25d366" />
+        <path d="M77 401.5l1-3.4a6.3 6.3 0 1 1 2.4 2.3z" fill="none" stroke="#04210f" stroke-width="1.6" stroke-linejoin="round" />
+        <text x="100" y="393" class="fv-chat-name">Tu negocio</text>
+        <text x="100" y="407" class="fv-chat-status">en línea · responde en segundos</text>
+
+        <g class="fv-msg fv-msg-in">
+          <rect x="72" y="420" width="212" height="30" rx="10" fill="#2e3544" />
+          <text x="84" y="440" class="fv-msg-text">Hola, ¿tienen cita para mañana?</text>
+        </g>
+        <g class="fv-typing">
+          <rect x="356" y="420" width="52" height="30" rx="10" fill="#0b5c35" />
+          <circle cx="371" cy="435" r="3" fill="#bdf5d2" /><circle cx="382" cy="435" r="3" fill="#bdf5d2" /><circle cx="393" cy="435" r="3" fill="#bdf5d2" />
+        </g>
+        <g class="fv-msg fv-msg-out">
+          <rect x="196" y="458" width="212" height="30" rx="10" fill="#0b5c35" />
+          <text x="208" y="478" class="fv-msg-text">¡Claro! Te agendo a las 10:00 ✓</text>
+        </g>
+      </g>
+    </svg>
+
+    <div class="fv-badge fv-badge-sale" aria-hidden="true">
+      <span class="fv-badge-icon">✓</span> Cita agendada
+    </div>
+  </div>
+
+  <div class="fv-float fv-float-a" aria-hidden="true">
+    <span class="dot dot-v"></span> 24/7 con IA
+  </div>
+  <div class="fv-float fv-float-b" aria-hidden="true">
+    <span class="dot dot-g"></span> Todo medido
+  </div>
+</div>
+
+<style>
+  .fv {
+    position: relative;
+    perspective: 1200px;
+    --rx: 0deg;
+    --ry: 0deg;
+  }
+  .fv-card {
+    position: relative;
+    border-radius: var(--radius-xl);
+    padding: clamp(10px, 2vw, 18px);
+    background:
+      linear-gradient(160deg, rgba(50, 57, 73, 0.55), rgba(21, 27, 42, 0.75)) padding-box,
+      linear-gradient(160deg, rgba(202, 190, 255, 0.45), rgba(72, 69, 85, 0.2) 40%, rgba(65, 229, 117, 0.3)) border-box;
+    border: 1px solid transparent;
+    box-shadow: 0 40px 80px -30px rgba(0, 0, 0, 0.7), 0 0 120px -40px rgba(148, 125, 255, 0.45);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transform: rotateX(var(--rx)) rotateY(var(--ry));
+    transform-style: preserve-3d;
+    transition: transform 0.6s var(--ease-out);
+  }
+  .fv-svg { width: 100%; height: auto; overflow: visible; }
+
+  .fv-chip { font: 600 15px var(--font-body); fill: #dce2f6; }
+  .fv-label { font: 800 13px var(--font-display); letter-spacing: 0.14em; }
+  .fv-chat-name { font: 700 13px var(--font-display); fill: #dce2f6; }
+  .fv-chat-status { font: 500 10.5px var(--font-body); fill: #41e575; }
+  .fv-msg-text { font: 500 12px var(--font-body); fill: #eef1fb; }
+
+  .fv-live { animation: blink 1.6s ease-in-out infinite; animation-delay: calc(var(--i) * 0.3s); }
+  @keyframes blink { 50% { opacity: 0.35; } }
+
+  .fv-dash { animation: dash 1.4s linear infinite; }
+  @keyframes dash { to { stroke-dashoffset: -20; } }
+
+  .fv-band { animation: band-in 0.9s var(--ease-spring) both; animation-delay: calc(0.35s + var(--i) * 0.12s); transform-box: fill-box; transform-origin: center; }
+  @keyframes band-in { from { opacity: 0; transform: scaleX(0.4); } }
+  .fv-glow { opacity: 0; animation: glow 3.6s ease-in-out infinite; animation-delay: calc(1.2s + var(--i) * 0.45s); }
+  @keyframes glow { 0%, 100% { opacity: 0; } 12% { opacity: 0.32; } 30% { opacity: 0; } }
+
+  .fv-particle { opacity: 0; filter: drop-shadow(0 0 6px rgba(202, 190, 255, 0.9)); }
+
+  /* Conversación en bucle (8 s) */
+  .fv-msg, .fv-typing { transform-box: fill-box; opacity: 0; }
+  .fv-msg-in { transform-origin: left bottom; animation: msg-in 8s var(--ease-out) infinite; }
+  .fv-typing { transform-origin: right bottom; animation: typing 8s ease infinite; }
+  .fv-msg-out { transform-origin: right bottom; animation: msg-out 8s var(--ease-out) infinite; }
+  @keyframes msg-in {
+    0%, 6% { opacity: 0; transform: translateY(8px) scale(0.92); }
+    12%, 90% { opacity: 1; transform: none; }
+    100% { opacity: 0; }
+  }
+  @keyframes typing {
+    0%, 18% { opacity: 0; }
+    22%, 36% { opacity: 1; }
+    40%, 100% { opacity: 0; }
+  }
+  @keyframes msg-out {
+    0%, 38% { opacity: 0; transform: translateY(8px) scale(0.92); }
+    44%, 90% { opacity: 1; transform: none; }
+    100% { opacity: 0; }
+  }
+
+  .fv-badge {
+    position: absolute;
+    right: -14px;
+    bottom: 26%;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 14px 9px 9px;
+    border-radius: 9999px;
+    background: rgba(7, 14, 28, 0.85);
+    border: 1px solid rgba(65, 229, 117, 0.45);
+    color: var(--on-surface);
+    font: 700 0.82rem var(--font-display);
+    box-shadow: 0 12px 30px -10px rgba(65, 229, 117, 0.45);
+    backdrop-filter: blur(8px);
+    animation: badge 8s var(--ease-spring) infinite;
+  }
+  .fv-badge-icon {
+    display: grid; place-items: center;
+    width: 24px; height: 24px; border-radius: 50%;
+    background: var(--secondary); color: #003915; font-size: 0.8rem;
+  }
+  @keyframes badge {
+    0%, 50% { opacity: 0; transform: translateY(10px) scale(0.8); }
+    56%, 90% { opacity: 1; transform: none; }
+    100% { opacity: 0; transform: translateY(-6px); }
+  }
+
+  .fv-float {
+    position: absolute;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-radius: 9999px;
+    font: 600 0.8rem var(--font-body);
+    color: var(--on-surface);
+    background: rgba(25, 32, 46, 0.75);
+    border: 1px solid rgba(202, 190, 255, 0.22);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.6);
+  }
+  .fv-float-a { top: 18%; left: -22px; animation: bob 6s ease-in-out infinite; }
+  .fv-float-b { top: -14px; right: 12%; animation: bob 7s ease-in-out infinite reverse; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .dot-v { background: var(--primary-container); box-shadow: 0 0 10px var(--primary-container); }
+  .dot-g { background: var(--secondary); box-shadow: 0 0 10px var(--secondary); }
+  @keyframes bob { 50% { transform: translateY(-10px); } }
+
+  @media (max-width: 560px) {
+    .fv-float-a { left: -6px; top: 22%; }
+    .fv-badge { right: -4px; }
+  }
+</style>
+
+<script>
+  const el = document.querySelector<HTMLElement>('[data-tilt]');
+  if (el && matchMedia('(hover: hover) and (prefers-reduced-motion: no-preference)').matches) {
+    const card = el.querySelector<HTMLElement>('.fv-card')!;
+    el.addEventListener('pointermove', (e) => {
+      const r = el.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - 0.5;
+      const y = (e.clientY - r.top) / r.height - 0.5;
+      card.style.setProperty('--ry', `${x * 8}deg`);
+      card.style.setProperty('--rx', `${-y * 8}deg`);
+    });
+    el.addEventListener('pointerleave', () => {
+      card.style.setProperty('--ry', '0deg');
+      card.style.setProperty('--rx', '0deg');
+    });
+  }
+</script>

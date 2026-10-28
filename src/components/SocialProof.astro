@@ -1,0 +1,60 @@
+---
+import Icon from './Icon.astro';
+import { site } from '../data/site';
+---
+<section id="clientes" class="section" data-section="prueba-social" aria-labelledby="social-title">
+  <div class="container">
+    <div class="social card reveal reveal--scale">
+      <div class="social-copy">
+        <p class="eyebrow"><span class="live" aria-hidden="true"></span> Cupos abiertos</p>
+        <h2 id="social-title" class="h2">Estamos abriendo cupos para nuestros primeros clientes.</h2>
+        <p class="lead">
+          Preferimos mostrarte nuestro trabajo funcionando que poner testimonios de relleno.
+          {site.founderBenefit && <> Los primeros negocios que trabajen con nosotros reciben <strong>{site.founderBenefit}</strong> a cambio de contar cómo les fue.</>}
+        </p>
+      </div>
+      <ul role="list" class="samples">
+        <li>
+          <Icon name="web" size={22} />
+          <div>
+            <strong>Esta página la hicimos nosotros.</strong>
+            <span>Rápida, medible y pensada para llevarte a WhatsApp. Es nuestra mejor muestra.</span>
+          </div>
+        </li>
+        {site.instagram && (
+          <li>
+            <Icon name="instagram" size={22} />
+            <div>
+              <strong>Mira nuestro contenido</strong>
+              <a class="link-arrow" href={`https://instagram.com/${site.instagram}`} target="_blank" rel="noopener">@{site.instagram} <Icon name="arrow" size={16} /></a>
+            </div>
+          </li>
+        )}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .social {
+    display: grid; grid-template-columns: 1.2fr 1fr; gap: clamp(24px, 4vw, 56px); align-items: center;
+    padding: clamp(28px, 5vw, 56px);
+    background:
+      radial-gradient(80% 120% at 0% 0%, rgba(255, 186, 75, 0.1), transparent 55%),
+      var(--surface-low);
+  }
+  .eyebrow { color: var(--tertiary); }
+  .eyebrow::before { display: none; }
+  .live { width: 8px; height: 8px; border-radius: 50%; background: var(--tertiary); animation: pulse 1.8s infinite; }
+  @keyframes pulse { 50% { opacity: 0.3; } }
+  .lead { margin-top: 16px; }
+  .samples { display: grid; gap: 14px; }
+  .samples li {
+    display: flex; gap: 14px; align-items: flex-start;
+    padding: 18px; border-radius: var(--radius-md); background: var(--surface-c);
+  }
+  .samples :global(svg) { flex: none; color: var(--primary); margin-top: 2px; }
+  .samples div { display: flex; flex-direction: column; gap: 4px; }
+  .samples span { color: var(--on-surface-variant); font-size: 0.93rem; }
+  @media (max-width: 860px) { .social { grid-template-columns: 1fr; } }
+</style>

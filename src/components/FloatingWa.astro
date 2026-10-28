@@ -1,0 +1,35 @@
+---
+import Icon from './Icon.astro';
+import { wa } from '../data/site';
+---
+<a class="fwa" href={wa('Hola, quiero información')} target="_blank" rel="noopener" data-floating-wa data-wa data-service="flotante" data-section="flotante" aria-label="Escribir por WhatsApp">
+  <span class="fwa-icon"><Icon name="whatsapp" size={26} /></span>
+  <span class="fwa-text">Escríbenos</span>
+</a>
+
+<style>
+  .fwa {
+    position: fixed; z-index: 60;
+    right: max(16px, env(safe-area-inset-right));
+    bottom: max(16px, env(safe-area-inset-bottom));
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 8px 20px 8px 8px; border-radius: 9999px;
+    background: var(--wa); color: #04210f;
+    font: 700 0.95rem var(--font-display);
+    box-shadow: 0 14px 34px -10px rgba(37, 211, 102, 0.7), 0 4px 14px rgba(0, 0, 0, 0.35);
+    transition: background-color 0.2s, transform 0.3s var(--ease-spring);
+  }
+  .fwa:hover { background: var(--wa-hover); transform: translateY(-2px); }
+  .fwa-icon {
+    position: relative; display: grid; place-items: center;
+    width: 42px; height: 42px; border-radius: 50%; background: rgba(4, 33, 15, 0.12);
+  }
+  .fwa-icon::after {
+    content: ''; position: absolute; inset: -4px; border-radius: 50%;
+    border: 2px solid var(--wa); animation: fwa-ping 2.4s var(--ease-out) infinite;
+  }
+  @keyframes fwa-ping { from { transform: scale(0.9); opacity: 0.9; } to { transform: scale(1.7); opacity: 0; } }
+  @media (max-width: 420px) {
+    .fwa { padding-right: 16px; font-size: 0.88rem; }
+  }
+</style>

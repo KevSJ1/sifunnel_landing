@@ -1,0 +1,68 @@
+---
+import WaButton from './WaButton.astro';
+import Icon from './Icon.astro';
+const steps = [
+  { t: 'Diagnóstico gratis (30 min).', d: 'Revisamos tu web, Google, redes, anuncios y WhatsApp, y te mostramos dónde se pierden clientes.', icon: 'search' },
+  { t: 'Plan priorizado.', d: 'Te decimos qué hacer primero según impacto y presupuesto. Si algo sencillo lo resuelve, no te vendemos algo complejo.', icon: 'flag' },
+  { t: 'Implementación.', d: 'Diseñamos, construimos y conectamos. Tú apruebas antes de publicar.', icon: 'bolt' },
+  { t: 'Medición y mejora.', d: 'Cada mes revisamos los números contigo y ajustamos.', icon: 'chart' },
+];
+---
+<section id="como-trabajamos" class="section section--alt" data-section="como-trabajamos" aria-labelledby="proceso-title">
+  <div class="container proc-grid">
+    <div class="proc-head reveal">
+      <p class="eyebrow">Cómo trabajamos</p>
+      <h2 id="proceso-title" class="h2">Primero entendemos tu negocio. Después hablamos de tecnología.</h2>
+      <p class="note">
+        <Icon name="people" size={20} />
+        <span>Tú no tienes que saber de tecnología. Nosotros hacemos la parte técnica.</span>
+      </p>
+      <WaButton label="Empezar con el paso 1, es gratis" message="Hola, quiero empezar con el paso 1: el DIAGNÓSTICO gratis" />
+    </div>
+
+    <ol class="steps stagger" role="list">
+      {steps.map((s, i) => (
+        <li class="step">
+          <span class="step-n" aria-hidden="true">{i + 1}</span>
+          <div>
+            <h3 class="h3"><Icon name={s.icon} size={20} class="step-icon" /> {s.t}</h3>
+            <p class="muted">{s.d}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .proc-grid { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: clamp(32px, 6vw, 80px); align-items: start; }
+  .proc-head { position: sticky; top: 110px; display: flex; flex-direction: column; gap: 22px; align-items: flex-start; }
+  .note { display: flex; gap: 12px; align-items: center; color: var(--on-surface-variant); }
+  .note :global(svg) { color: var(--secondary); flex: none; }
+
+  .steps { display: grid; gap: 14px; position: relative; }
+  .step {
+    position: relative;
+    display: flex; gap: 20px; align-items: flex-start;
+    padding: 24px; border-radius: var(--radius-lg);
+    background: var(--surface-low); border: 1px solid rgba(72, 69, 85, 0.6);
+    transition: border-color 0.3s, transform 0.5s var(--ease-out);
+  }
+  .step:hover { border-color: rgba(148, 125, 255, 0.5); transform: translateX(6px); }
+  .step-n {
+    flex: none; width: 48px; height: 48px; border-radius: 50%;
+    display: grid; place-items: center;
+    font: 800 1.2rem var(--font-display); color: #1c0062;
+    background: linear-gradient(135deg, var(--primary), var(--primary-container));
+    box-shadow: 0 0 0 5px rgba(148, 125, 255, 0.12);
+  }
+  .step:first-child .step-n { background: linear-gradient(135deg, var(--secondary), var(--secondary-container)); color: #003915; box-shadow: 0 0 0 5px rgba(65, 229, 117, 0.14); }
+  .step .h3 { display: flex; gap: 10px; align-items: center; margin-bottom: 6px; }
+  .step :global(.step-icon) { color: var(--primary); flex: none; }
+
+  @media (max-width: 860px) {
+    .proc-grid { grid-template-columns: 1fr; }
+    .proc-head { position: static; }
+    .proc-head :global(.btn) { width: 100%; }
+  }
+</style>

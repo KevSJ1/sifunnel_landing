@@ -1,0 +1,108 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Hero from '../components/Hero.astro';
+import Apps from '../components/Apps.astro';
+import Services from '../components/Services.astro';
+import Plans from '../components/Plans.astro';
+import Faq from '../components/Faq.astro';
+import FinalCta from '../components/FinalCta.astro';
+import Footer from '../components/Footer.astro';
+import FloatingWa from '../components/FloatingWa.astro';
+import { site, services, apps, getFaqs } from '../data/site';
+
+const orgId = `${site.url}/#organization`;
+const sameAs = [site.instagram && `https://instagram.com/${site.instagram}`].filter(Boolean);
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'ProfessionalService',
+    '@id': orgId,
+    name: site.name,
+    url: `${site.url}/`,
+    logo: `${site.url}/icon-512.png`,
+    image: `${site.url}/og-image.png`,
+    description: site.description,
+    slogan: 'Conectamos todo tu negocio digital para que venda por ti.',
+    areaServed: { '@type': 'Country', name: 'Colombia' },
+    knowsLanguage: 'es',
+    ...(site.city && { address: { '@type': 'PostalAddress', addressLocality: site.city, addressCountry: 'CO' } }),
+    ...(site.email && { email: site.email }),
+    ...(site.whatsappNumber && { telephone: `+${site.whatsappNumber}` }),
+    ...(sameAs.length && { sameAs }),
+    knowsAbout: ['Marketing digital', 'SEO técnico', 'SEO local', 'Google Ads', 'Meta Ads', 'Diseño web', 'Inteligencia artificial', 'Automatización', 'WhatsApp Business', 'CRM'],
+    hasOfferCatalog: {
+      '@type': 'OfferCatalog',
+      name: 'Servicios de crecimiento digital',
+      itemListElement: services.map((s) => ({
+        '@type': 'Offer',
+        itemOffered: {
+          '@type': 'Service',
+          name: s.name,
+          description: s.text,
+          areaServed: { '@type': 'Country', name: 'Colombia' },
+          provider: { '@id': orgId },
+        },
+      })),
+    },
+  },
+  ...apps.map((a) => ({
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: a.name,
+    applicationCategory: 'BusinessApplication',
+    operatingSystem: 'Web',
+    description: a.tagline,
+    featureList: a.bullets,
+    ...(a.url && { url: a.url }),
+    provider: { '@id': orgId },
+    ...(a.price && {
+      offers: { '@type': 'Offer', price: '250000', priceCurrency: 'COP', availability: 'https://schema.org/InStock', url: `${site.url}/#app-${a.id}` },
+    }),
+  })),
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    '@id': `${site.url}/#website`,
+    url: `${site.url}/`,
+    name: site.name,
+    inLanguage: site.lang,
+    publisher: { '@id': orgId },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    '@id': `${site.url}/#webpage`,
+    url: `${site.url}/`,
+    name: site.title,
+    description: site.description,
+    inLanguage: site.lang,
+    isPartOf: { '@id': `${site.url}/#website` },
+    about: { '@id': orgId },
+    primaryImageOfPage: `${site.url}/og-image.png`,
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: getFaqs().map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  },
+];
+---
+<Base schema={schema}>
+  <Header />
+  <main id="contenido">
+    <Hero />
+    <Services />
+    <Apps />
+    <Plans />
+    <Faq />
+    <FinalCta />
+  </main>
+  <Footer />
+  <FloatingWa />
+</Base>

@@ -1,0 +1,58 @@
+---
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+import { site, services } from '../data/site';
+const year = new Date().getFullYear();
+---
+<footer class="footer" data-section="footer">
+  <div class="container footer-grid">
+    <div class="f-brand">
+      <Logo size={40} />
+      <p class="muted">Crecimiento digital con IA para pymes. {site.city ? `${site.city}, Colombia.` : 'Colombia.'}</p>
+    </div>
+
+    <nav aria-label="Servicios" class="f-col">
+      <p class="f-title">Servicios</p>
+      <ul role="list">
+        {services.map((s) => <li><a href={`/#servicio-${s.id}`}>{s.name}</a></li>)}
+      </ul>
+    </nav>
+
+    <div class="f-col">
+      <p class="f-title">Contacto</p>
+      <ul role="list">
+        <li><a href={site.whatsappLink} target="_blank" rel="noopener" data-wa data-service="footer"><Icon name="whatsapp" size={18} /> WhatsApp</a></li>
+        {site.instagram && <li><a href={`https://instagram.com/${site.instagram}`} target="_blank" rel="noopener"><Icon name="instagram" size={18} /> @{site.instagram}</a></li>}
+        {site.email && <li><a href={`mailto:${site.email}`}><Icon name="mail" size={18} /> {site.email}</a></li>}
+      </ul>
+    </div>
+
+    <div class="f-col">
+      <p class="f-title">Legal</p>
+      <ul role="list">
+        <li><a href="/privacidad/">Política de privacidad y tratamiento de datos (Ley 1581 de 2012)</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="container f-bottom">
+    <p>© {year} SiFunnel{site.legalName && ` · ${site.legalName}`}</p>
+    <p>Web · SEO · Anuncios · Contenido con IA · Presencia digital · Agentes IA · Automatización</p>
+  </div>
+</footer>
+
+<style>
+  .footer { background: var(--surface-lowest); border-top: 1px solid rgba(72, 69, 85, 0.5); padding-top: 64px; padding-bottom: 110px; }
+  .footer-grid { display: grid; grid-template-columns: 1.3fr 1fr 0.8fr 1fr; gap: 36px; }
+  .f-brand { display: flex; flex-direction: column; gap: 14px; }
+  .f-title { font: 700 0.8rem var(--font-body); letter-spacing: 0.08em; text-transform: uppercase; color: var(--outline); margin-bottom: 14px; }
+  .f-col ul { display: grid; gap: 10px; }
+  .f-col a { display: inline-flex; gap: 8px; align-items: center; color: var(--on-surface-variant); font-size: 0.93rem; transition: color 0.2s; }
+  .f-col a:hover { color: var(--primary); }
+  .f-bottom {
+    margin-top: 48px; padding-top: 24px; border-top: 1px solid rgba(72, 69, 85, 0.4);
+    display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px;
+    font-size: 0.85rem; color: var(--outline);
+  }
+  @media (max-width: 900px) { .footer-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 560px) { .footer-grid { grid-template-columns: 1fr; } }
+</style>

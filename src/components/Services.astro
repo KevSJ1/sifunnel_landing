@@ -1,0 +1,127 @@
+---
+import Icon from './Icon.astro';
+import WaButton from './WaButton.astro';
+import { services, otherServices, stages, wa, site } from '../data/site';
+const stageColor: Record<string, string> = {
+  atraer: 'var(--st-atraer)', convencer: 'var(--st-convencer)', convertir: 'var(--st-convertir)', medir: 'var(--st-medir)',
+};
+---
+<section id="servicios" class="section section--alt" data-section="servicios" aria-labelledby="servicios-title">
+  <div class="container">
+    <div class="section-head reveal">
+      <p class="eyebrow">Servicios</p>
+      <h2 id="servicios-title" class="h2">Todo lo que tu negocio necesita para crecer en digital.</h2>
+    </div>
+
+    <ul role="list" class="services stagger">
+      {services.map((s) => (
+        <li class:list={[s.wide && 'wide', s.full && 'full', s.id === 'agente' && 'agent-li']}>
+          <article class="card svc spotlight" style={`--c:${stageColor[s.stage]}`} id={`servicio-${s.id}`}>
+            <div class="svc-top">
+              <span class="svc-icon"><Icon name={s.icon} size={26} /></span>
+              <span class="svc-stage">Etapa: {stages[s.stage].name}</span>
+            </div>
+            <h3 class="h3">{s.name}</h3>
+            <p class="svc-q">“{s.question}”</p>
+            <p class="svc-text">{s.text}</p>
+            <ul role="list" class="svc-list">
+              {s.bullets.map((b) => <li><Icon name="check" size={16} /> <span>{b}</span></li>)}
+            </ul>
+            <div class="svc-links">
+              <a class="link-arrow" href={wa(s.msg)} target="_blank" rel="noopener" data-wa data-service={s.id}>
+                Me interesa <Icon name="arrow" size={18} />
+              </a>
+              {s.id === 'agente' && site.agentDemoUrl && (
+                <a class="link-arrow demo" href="#prueba">Probar el agente en vivo <Icon name="arrow" size={18} /></a>
+              )}
+            </div>
+          </article>
+        </li>
+      ))}
+    </ul>
+
+    <div class="others reveal">
+      <p class="others-label">Otros servicios</p>
+      <ul role="list" class="others-list">
+        {otherServices.map((o, i) => (
+          <li><Icon name={['shield', 'wrench'][i]} size={18} /> {o}</li>
+        ))}
+      </ul>
+      <p class="muted">¿Necesitas algo distinto? Cuéntanos en el diagnóstico.</p>
+    </div>
+
+    <div class="center reveal">
+      <WaButton label="No sé cuál necesito, quiero el diagnóstico" message="Hola, no sé qué servicio necesito. Quiero el DIAGNÓSTICO" />
+    </div>
+  </div>
+</section>
+
+<style>
+  .services { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .services { grid-auto-flow: dense; }
+  .services > li { display: flex; }
+  .services > li.wide { grid-column: span 2; }
+  .services > li.full { grid-column: 1 / -1; }
+  .wide .svc-list { grid-template-columns: repeat(3, 1fr); gap: 12px 20px; }
+  .wide .svc-text { max-width: 60ch; }
+  .svc {
+    display: flex; flex-direction: column; gap: 14px; width: 100%;
+    transition: transform 0.5s var(--ease-out), border-color 0.4s, box-shadow 0.5s;
+  }
+  .svc::after {
+    content: ''; position: absolute; left: 0; right: 0; top: 0; height: 3px;
+    background: var(--c); transform: scaleX(0); transform-origin: left;
+    transition: transform 0.6s var(--ease-out);
+  }
+  .svc:hover { transform: translateY(-6px); border-color: color-mix(in srgb, var(--c) 45%, transparent); box-shadow: 0 30px 60px -30px color-mix(in srgb, var(--c) 50%, transparent); }
+  .svc:hover::after { transform: scaleX(1); }
+  .svc-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  .svc-icon {
+    display: grid; place-items: center; width: 52px; height: 52px; border-radius: 14px;
+    color: var(--c);
+    background: color-mix(in srgb, var(--c) 14%, transparent);
+    border: 1px solid color-mix(in srgb, var(--c) 35%, transparent);
+    transition: transform 0.5s var(--ease-spring);
+  }
+  .svc:hover .svc-icon { transform: rotate(-8deg) scale(1.08); }
+  .svc-stage {
+    font: 700 0.72rem var(--font-body); letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 5px 10px; border-radius: 9999px;
+    color: var(--c); border: 1px solid color-mix(in srgb, var(--c) 35%, transparent);
+  }
+  .svc-q { font-style: italic; color: var(--primary); font-weight: 500; }
+  .svc-text { color: var(--on-surface-variant); font-size: 0.97rem; }
+  .svc-list { display: grid; gap: 8px; font-size: 0.92rem; }
+  .svc-list li { display: flex; gap: 10px; align-items: flex-start; }
+  .svc-list :global(svg) { flex: none; margin-top: 4px; color: var(--secondary); }
+  .svc-links { margin-top: auto; padding-top: 8px; display: flex; flex-wrap: wrap; gap: 8px 22px; }
+  .demo { color: var(--secondary); }
+
+  .others {
+    margin-top: 28px; padding: 22px 26px; border-radius: var(--radius-lg);
+    border: 1px dashed var(--outline-variant);
+    display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: center;
+  }
+  .others-label { font: 700 0.8rem var(--font-body); letter-spacing: 0.06em; text-transform: uppercase; color: var(--outline); }
+  .others-list { display: flex; flex-wrap: wrap; gap: 10px; }
+  .others-list li {
+    display: inline-flex; gap: 8px; align-items: center;
+    padding: 8px 14px; border-radius: 9999px; background: var(--surface-c);
+    font-size: 0.9rem;
+  }
+  .others-list :global(svg) { color: var(--primary); }
+  .others .muted { font-size: 0.92rem; }
+  .center { margin-top: 48px; display: flex; justify-content: center; }
+
+  @media (max-width: 1024px) {
+    .services { grid-template-columns: repeat(2, 1fr); }
+    .services > li.wide { grid-column: auto; }
+    .services > li.agent-li, .services > li.full { grid-column: span 2; }
+    .wide .svc-list { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 640px) {
+    .services { grid-template-columns: 1fr; }
+    .services > li.agent-li, .services > li.full { grid-column: auto; }
+    .center :global(.btn) { width: 100%; }
+  }
+</style>

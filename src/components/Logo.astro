@@ -1,0 +1,41 @@
+---
+/** Isotipo SiFunnel en vector: embudo de 4 etapas sobre disco con anillos. */
+interface Props { size?: number; withText?: boolean; class?: string; animated?: boolean }
+const { size = 36, withText = true, class: cls, animated = false } = Astro.props;
+---
+<span class:list={['logo', cls, animated && 'logo--animated']}>
+  <svg width={size} height={size} viewBox="0 0 100 100" aria-hidden="true">
+    <circle cx="52" cy="50" r="46" fill="none" stroke="#6b7180" stroke-width="2.4" />
+    <circle cx="52" cy="50" r="42" fill="none" stroke="#e8ecf6" stroke-width="2" />
+    <circle cx="52" cy="50" r="38" fill="#05080f" />
+    <circle cx="52" cy="50" r="33" fill="none" stroke="#6b7180" stroke-width="1.6" opacity=".8" />
+    <circle cx="52" cy="50" r="28" fill="none" stroke="#6b7180" stroke-width="1.4" opacity=".6" />
+    <g class="logo-seg">
+      <path d="M14 10 L32 18.2 L33.6 81 L15.6 91 Z" fill="#1067f5" />
+      <path d="M36 20 L52 27.5 L53.2 72.5 L37.4 80 Z" fill="#0bb3b0" />
+      <path d="M56 29.4 L69 35.6 L69.8 64.6 L57 71 Z" fill="#fd6550" />
+      <path d="M72.4 37.2 L86 43.6 L86.4 56.2 L73 62.8 Z" fill="#f9b908" />
+    </g>
+  </svg>
+  {withText && <span class="logo-text">SIFUNNEL</span>}
+</span>
+
+<style>
+  .logo { display: inline-flex; align-items: center; gap: 10px; }
+  .logo-text {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.15rem;
+    letter-spacing: 0.04em;
+    color: #fff;
+  }
+  .logo--animated .logo-seg path {
+    transform-box: fill-box;
+    transform-origin: left center;
+    animation: seg-in 0.9s var(--ease-out) both;
+  }
+  .logo--animated .logo-seg path:nth-child(2) { animation-delay: 0.1s; }
+  .logo--animated .logo-seg path:nth-child(3) { animation-delay: 0.2s; }
+  .logo--animated .logo-seg path:nth-child(4) { animation-delay: 0.3s; }
+  @keyframes seg-in { from { opacity: 0; transform: translateX(-8px) scaleX(0.6); } }
+</style>

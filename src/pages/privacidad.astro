@@ -1,0 +1,61 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { site } from '../data/site';
+const contact = [site.email && `correo ${site.email}`, `WhatsApp (${site.whatsappLink})`].filter(Boolean).join(' o ');
+---
+<Base
+  title="Política de privacidad y tratamiento de datos | SiFunnel"
+  description="Cómo SiFunnel recolecta, usa y protege tus datos personales conforme a la Ley 1581 de 2012 y el Decreto 1377 de 2013."
+>
+  <Header />
+  <main id="contenido" class="legal">
+    <article class="container prose">
+      <p class="eyebrow">Legal</p>
+      <h1 class="h2">Política de privacidad y tratamiento de datos personales</h1>
+      <p class="muted">Conforme a la Ley 1581 de 2012 y el Decreto 1377 de 2013 (Colombia).</p>
+
+      <h2>1. Responsable del tratamiento</h2>
+      <p>
+        {site.legalName ?? 'SiFunnel'}{site.city && `, con domicilio en ${site.city}, Colombia`}. Canal de contacto para asuntos de datos personales: {contact}.
+      </p>
+
+      <h2>2. Datos que recolectamos</h2>
+      <p>Cuando nos escribes por WhatsApp o usas este sitio podemos tratar: nombre, número de teléfono, nombre y datos públicos de tu negocio (web, redes sociales, perfil de Google), el contenido de los mensajes que nos envías y datos de navegación anónimos (páginas vistas y clics) cuando la analítica está activa.</p>
+
+      <h2>3. Finalidades</h2>
+      <ul>
+        <li>Responder tus solicitudes y realizar el diagnóstico o la auditoría que pidas.</li>
+        <li>Enviarte propuestas comerciales relacionadas con lo que solicitaste.</li>
+        <li>Prestar los servicios contratados y darles seguimiento.</li>
+        <li>Medir y mejorar el funcionamiento de este sitio.</li>
+      </ul>
+
+      <h2>4. Derechos del titular</h2>
+      <p>Como titular puedes conocer, actualizar, rectificar y suprimir tus datos; solicitar prueba de la autorización otorgada; ser informado sobre el uso de tus datos; revocar la autorización; y presentar quejas ante la Superintendencia de Industria y Comercio (SIC).</p>
+
+      <h2>5. Cómo ejercer tus derechos</h2>
+      <p>Escríbenos por {contact} indicando tu nombre, tu solicitud y un medio de respuesta. Las consultas se atienden en un máximo de diez (10) días hábiles y los reclamos en un máximo de quince (15) días hábiles, según los términos de la Ley 1581 de 2012.</p>
+
+      <h2>6. Seguridad y transferencia</h2>
+      <p>Aplicamos medidas técnicas y administrativas razonables para proteger tu información. Algunas herramientas que usamos (por ejemplo, WhatsApp, servicios de analítica o de alojamiento) pueden almacenar datos fuera de Colombia, siempre bajo condiciones de seguridad adecuadas.</p>
+
+      <h2>7. Cookies y analítica</h2>
+      <p>Este sitio puede usar herramientas de medición (como Google Analytics o Meta Pixel) para saber qué secciones son útiles y desde dónde llegan los visitantes. Puedes bloquearlas desde la configuración de tu navegador.</p>
+
+      <h2>8. Vigencia</h2>
+      <p>Esta política rige desde su publicación. Los datos se conservarán mientras sean necesarios para las finalidades descritas o mientras exista una relación comercial o una obligación legal.</p>
+    </article>
+  </main>
+  <Footer />
+</Base>
+
+<style>
+  .legal { padding-block: 140px 80px; }
+  .prose { max-width: 820px; }
+  .prose h2 { font: 700 1.3rem var(--font-display); margin-top: 40px; margin-bottom: 12px; }
+  .prose p, .prose li { color: var(--on-surface-variant); }
+  .prose ul { padding-left: 1.2em; display: grid; gap: 6px; }
+  .prose .muted { margin-top: 12px; }
+</style>

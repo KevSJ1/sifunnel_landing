@@ -1,0 +1,64 @@
+---
+import Icon from './Icon.astro';
+import { wa, site } from '../data/site';
+const demo = site.agentDemoUrl;
+---
+<section id="prueba" class="section" data-section="prueba" aria-labelledby="prueba-title">
+  <div class="container">
+    <div class="section-head section-head--center reveal">
+      <p class="eyebrow">Prueba en vivo</p>
+      <h2 id="prueba-title" class="h2">No nos creas. <span class="text-gradient">Compruébalo.</span></h2>
+    </div>
+
+    <div class:list={['proof', demo && 'proof--two']}>
+      <article class="card proof-card spotlight reveal">
+        <span class="proof-icon audit"><Icon name="search" size={28} /></span>
+        <h3 class="h3">Auditoría express gratis</h3>
+        <p class="muted">
+          Mándanos el link de tu web o tu Instagram y te devolvemos 3 mejoras concretas que puedes aplicar ya, uses o no nuestros servicios.
+        </p>
+        <ol class="mini-steps" role="list">
+          <li><span>1</span> Envías tu link por WhatsApp</li>
+          <li><span>2</span> Lo revisamos</li>
+          <li><span>3</span> Recibes 3 mejoras concretas</li>
+        </ol>
+        <a class="btn btn-wa" href={wa('Hola, quiero la AUDITORÍA gratis. Este es mi link: ')} target="_blank" rel="noopener" data-wa data-service="auditoria">
+          <Icon name="whatsapp" /> <span>Quiero mi auditoría gratis</span>
+        </a>
+      </article>
+
+      {demo && (
+        <article class="card proof-card spotlight reveal" style="--d:2">
+          <span class="proof-icon agent"><Icon name="agent" size={28} /></span>
+          <h3 class="h3">Prueba nuestro agente de IA</h3>
+          <p class="muted">Escríbele como si fueras un cliente y mira cómo responde y agenda.</p>
+          <a class="btn btn-ghost" href={demo} target="_blank" rel="noopener" data-wa data-service="demo-agente">
+            Probar el agente <Icon name="arrow" size={18} />
+          </a>
+        </article>
+      )}
+    </div>
+  </div>
+</section>
+
+<style>
+  .proof { display: grid; gap: 20px; max-width: 640px; margin-inline: auto; }
+  .proof--two { grid-template-columns: 1fr 1fr; max-width: none; }
+  .proof-card { display: flex; flex-direction: column; gap: 16px; align-items: flex-start; }
+  .proof-card .btn { margin-top: auto; }
+  .proof-icon {
+    display: grid; place-items: center; width: 60px; height: 60px; border-radius: 16px;
+  }
+  .audit { color: var(--secondary); background: rgba(65, 229, 117, 0.1); border: 1px solid rgba(65, 229, 117, 0.3); }
+  .agent { color: var(--primary); background: rgba(148, 125, 255, 0.12); border: 1px solid rgba(148, 125, 255, 0.35); }
+  .mini-steps { display: grid; gap: 10px; margin-block: 4px 8px; }
+  .mini-steps li { display: flex; gap: 12px; align-items: center; font-size: 0.95rem; }
+  .mini-steps span {
+    display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%;
+    font: 700 0.8rem var(--font-display); background: var(--surface-highest); color: var(--primary);
+  }
+  @media (max-width: 760px) {
+    .proof--two { grid-template-columns: 1fr; }
+    .proof-card .btn { width: 100%; }
+  }
+</style>

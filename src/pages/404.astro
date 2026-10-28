@@ -1,0 +1,27 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import WaButton from '../components/WaButton.astro';
+---
+<Base title="Página no encontrada | SiFunnel" description="Esta página no existe. Vuelve al inicio o pide tu diagnóstico gratis." noindex>
+  <Header />
+  <main id="contenido" class="nf">
+    <div class="container nf-inner">
+      <p class="code">404</p>
+      <h1 class="h2">Esta página se salió del embudo.</h1>
+      <p class="lead">No encontramos lo que buscabas, pero podemos ayudarte a encontrar más clientes.</p>
+      <div class="actions">
+        <a class="btn btn-ghost" href="/">Volver al inicio</a>
+        <WaButton label="Quiero mi diagnóstico gratis" />
+      </div>
+    </div>
+  </main>
+  <Footer />
+</Base>
+<style>
+  .nf { min-height: 80vh; display: grid; place-items: center; padding-block: 140px 80px; text-align: center; }
+  .nf-inner { display: flex; flex-direction: column; align-items: center; gap: 20px; }
+  .code { font: 800 clamp(5rem, 18vw, 10rem)/1 var(--font-display); background: linear-gradient(90deg, #1067f5, #0bb3b0, #fd6550, #f9b908); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .actions { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; margin-top: 8px; }
+</style>

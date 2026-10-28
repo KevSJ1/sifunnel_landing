@@ -1,0 +1,85 @@
+---
+import Icon from './Icon.astro';
+type C = 'yes' | 'no' | string;
+const cols = ['Freelancers separados', 'Agencia tradicional', 'SiFunnel'];
+const rows: [string, C, C, C][] = [
+  ['Web, SEO, anuncios, contenido y WhatsApp conectados', 'no', 'A veces', 'yes'],
+  ['Automatización e IA integradas', 'no', 'Rara vez', 'yes'],
+  ['Un solo responsable', 'no', 'yes', 'yes'],
+  ['Medición de clientes, no solo de likes', 'no', 'A veces', 'yes'],
+  ['Te recomienda lo simple si es suficiente', 'Depende', 'Rara vez', 'yes'],
+];
+---
+<section id="por-que" class="section section--alt" data-section="por-que" aria-labelledby="porque-title">
+  <div class="container">
+    <div class="section-head reveal">
+      <p class="eyebrow">Por qué SiFunnel</p>
+      <h2 id="porque-title" class="h2">Un solo equipo que entiende de negocio y de tecnología.</h2>
+      <p class="lead">
+        Contratar un diseñador para la web, un freelancer para las redes, otro para los anuncios y una herramienta para WhatsApp termina en piezas que no se hablan y en nadie responsable del resultado. Con SiFunnel todo está conectado y medido por el mismo equipo.
+      </p>
+    </div>
+
+    <div class="table-wrap reveal">
+      <table class="cmp">
+        <caption class="sr-only">Comparación entre freelancers separados, agencia tradicional y SiFunnel</caption>
+        <thead>
+          <tr>
+            <th scope="col"><span class="sr-only">Característica</span></th>
+            <th scope="col">Freelancers separados</th>
+            <th scope="col">Agencia tradicional</th>
+            <th scope="col" class="us">SiFunnel</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map(([label, ...cells]) => (
+            <tr>
+              <th scope="row">{label}</th>
+              {cells.map((c, i) => (
+                <td class:list={[i === 2 && 'us']} data-label={cols[i]}>
+                  {c === 'yes' ? <span class="yes"><Icon name="check" size={18} /><span class="sr-only">Sí</span></span>
+                    : c === 'no' ? <span class="no"><Icon name="x" size={16} /><span class="sr-only">No</span></span>
+                    : <span class="partial">{c}</span>}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<style>
+  .lead { margin-top: 18px; }
+  .table-wrap { overflow-x: auto; border-radius: var(--radius-lg); border: 1px solid rgba(72, 69, 85, 0.7); background: var(--surface-low); }
+  .cmp { width: 100%; border-collapse: collapse; min-width: 640px; }
+  .cmp th, .cmp td { padding: 18px 20px; text-align: center; border-bottom: 1px solid rgba(72, 69, 85, 0.5); }
+  .cmp tbody tr:last-child > * { border-bottom: 0; }
+  .cmp thead th { font: 700 0.9rem var(--font-display); color: var(--on-surface-variant); }
+  .cmp tbody th { text-align: left; font-weight: 500; color: var(--on-surface); }
+  .cmp .us { background: rgba(148, 125, 255, 0.08); }
+  .cmp thead .us { color: var(--primary); font-size: 1rem; box-shadow: inset 0 3px 0 var(--primary-container); }
+  .cmp tbody tr { transition: background-color 0.2s; }
+  .cmp tbody tr:hover { background: rgba(255, 255, 255, 0.02); }
+  .yes, .no { display: inline-grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; }
+  .yes { background: rgba(65, 229, 117, 0.15); color: var(--secondary); }
+  .no { background: rgba(255, 180, 171, 0.08); color: var(--error); opacity: 0.8; }
+  .partial { font-size: 0.88rem; color: var(--tertiary); }
+
+  /* Móvil: cada fila se vuelve una tarjeta */
+  @media (max-width: 680px) {
+    .table-wrap { overflow: visible; border: 0; background: none; }
+    .cmp { min-width: 0; }
+    .cmp thead { display: none; }
+    .cmp, .cmp tbody, .cmp tr, .cmp th, .cmp td { display: block; }
+    .cmp tbody { display: grid; gap: 12px; }
+    .cmp tr { border-radius: var(--radius-lg); border: 1px solid rgba(72, 69, 85, 0.7); background: var(--surface-low); overflow: hidden; }
+    .cmp tbody th { padding: 16px 18px 10px; border: 0; font: 600 1rem var(--font-display); }
+    .cmp td { display: flex; justify-content: space-between; align-items: center; padding: 10px 18px; border-bottom: 1px solid rgba(72, 69, 85, 0.4); text-align: right; }
+    .cmp td::before { content: attr(data-label); font-size: 0.88rem; color: var(--on-surface-variant); text-align: left; }
+    .cmp td.us::before { color: var(--primary); font-weight: 700; }
+    .cmp tbody tr:last-child > * { border-bottom: 1px solid rgba(72, 69, 85, 0.4); }
+    .cmp tr > td:last-child { border-bottom: 0 !important; }
+  }
+</style>

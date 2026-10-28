@@ -1,0 +1,144 @@
+---
+import WaButton from './WaButton.astro';
+import Icon from './Icon.astro';
+import FunnelVisual from './FunnelVisual.astro';
+---
+<section id="inicio" class="hero" data-section="hero" aria-labelledby="hero-title">
+  <div class="grid-bg"></div>
+  <div class="orb orb-a" aria-hidden="true"></div>
+  <div class="orb orb-b" aria-hidden="true"></div>
+
+  <div class="container hero-grid">
+    <div class="hero-copy">
+      <p class="pill hero-in" style="--i:0">
+        <span class="pill-dot" aria-hidden="true"></span>
+        Crecimiento digital con IA · Pymes en Colombia
+      </p>
+      <h1 id="hero-title" class="h1">
+        <span class="hero-in" style="--i:1">Más clientes, menos trabajo manual.</span>
+        <span class="hero-in sub-h1" style="--i:2">Conectamos todo tu negocio digital para que <span class="text-gradient">venda por ti.</span></span>
+      </h1>
+      <p class="lead hero-in" style="--i:3">
+        Web que convierte, SEO, anuncios, contenido con IA y un WhatsApp que responde 24/7. Lo diseñamos, lo conectamos y lo medimos como un solo sistema para que cada peso que inviertas se convierta en clientes.
+      </p>
+      <div class="hero-actions hero-in" style="--i:4">
+        <div class="primary-wrap">
+          <WaButton label="Quiero mi diagnóstico gratis" size="lg" />
+          <p class="micro">Revisamos tu presencia digital sin costo y te decimos qué arreglar primero.</p>
+        </div>
+        <a href="#servicios" class="btn btn-ghost">Ver servicios <Icon name="down" size={18} /></a>
+      </div>
+    </div>
+
+    <div class="hero-visual hero-in" style="--i:2">
+      <FunnelVisual />
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
+    padding-top: clamp(110px, 14vw, 140px);
+    padding-bottom: clamp(56px, 8vw, 96px);
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    z-index: -1;
+    pointer-events: none;
+    will-change: transform;
+  }
+  .orb-a {
+    width: 560px; height: 560px;
+    background: radial-gradient(circle, rgba(148, 125, 255, 0.35), transparent 65%);
+    top: -160px; right: -120px;
+    animation: drift 18s ease-in-out infinite alternate;
+  }
+  .orb-b {
+    width: 460px; height: 460px;
+    background: radial-gradient(circle, rgba(65, 229, 117, 0.16), transparent 65%);
+    bottom: -180px; left: -140px;
+    animation: drift 22s ease-in-out infinite alternate-reverse;
+  }
+  @keyframes drift {
+    to { transform: translate3d(-60px, 50px, 0) scale(1.1); }
+  }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.08fr 0.92fr;
+    gap: clamp(32px, 5vw, 64px);
+    align-items: center;
+  }
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 16px;
+    border-radius: 9999px;
+    background: rgba(148, 125, 255, 0.1);
+    border: 1px solid rgba(202, 190, 255, 0.25);
+    color: var(--primary);
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 24px;
+  }
+  .pill-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--secondary);
+    box-shadow: 0 0 0 0 rgba(65, 229, 117, 0.6);
+    animation: ping 2s infinite;
+  }
+  @keyframes ping {
+    70% { box-shadow: 0 0 0 8px rgba(65, 229, 117, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(65, 229, 117, 0); }
+  }
+  .h1 span { display: block; }
+  .h1 .sub-h1 {
+    font-size: 0.62em;
+    font-weight: 700;
+    line-height: 1.25;
+    margin-top: 0.45em;
+    color: var(--on-surface-variant);
+  }
+  .h1 .sub-h1 .text-gradient { display: inline; }
+  .lead { margin-top: 24px; max-width: 590px; }
+  .hero-actions {
+    margin-top: 36px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  .primary-wrap { display: flex; flex-direction: column; gap: 10px; }
+  .primary-wrap :global(.btn) { white-space: nowrap; }
+  .micro { max-width: 380px; }
+  .micro { font-size: 0.85rem; color: var(--outline); line-height: 1.45; padding-left: 8px; }
+
+  /* Entrada del hero (sin esperar al JS) */
+  .hero-in {
+    animation: hero-in 0.8s var(--ease-out) both;
+    animation-delay: calc(var(--i, 0) * 70ms);
+  }
+  @keyframes hero-in {
+    from { opacity: 0; transform: translateY(22px); }
+  }
+
+  @media (max-width: 960px) {
+    .hero { min-height: auto; }
+    .hero-grid { grid-template-columns: 1fr; }
+    .hero-visual { max-width: 520px; margin-inline: auto; width: 100%; }
+  }
+  @media (max-width: 560px) {
+    .hero-actions { flex-direction: column; align-items: stretch; }
+    .primary-wrap :global(.btn) { white-space: normal; font-size: 1.05rem; padding-inline: 22px; }
+    .hero-actions :global(.btn) { width: 100%; }
+  }
+</style>

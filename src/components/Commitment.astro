@@ -1,0 +1,40 @@
+---
+import Icon from './Icon.astro';
+import { site } from '../data/site';
+const items = [
+  { icon: 'doc', t: 'Sin letra pequeña.', d: 'En el diagnóstico te explicamos qué haríamos, cuánto cuesta y qué puedes esperar.' },
+  { icon: 'eye', t: 'Nada se publica sin tu aprobación.', d: 'Web, contenido, anuncios o agente: tú das el visto bueno.' },
+  { icon: 'handshake', t: 'Te decimos la verdad.', d: 'Si un servicio no te conviene todavía, te lo decimos.' },
+  site.commitments.clientOwnsAssets ? { icon: 'lock', t: 'Lo tuyo es tuyo.', d: 'Tu web, tus cuentas y tus datos quedan a tu nombre.' } : null,
+  site.commitments.guarantee ? { icon: 'shield', t: 'Garantía.', d: site.commitments.guarantee } : null,
+].filter(Boolean) as { icon: string; t: string; d: string }[];
+---
+<section id="compromiso" class="section section--alt" data-section="compromiso" aria-labelledby="comp-title">
+  <div class="container">
+    <div class="section-head section-head--center reveal">
+      <p class="eyebrow">Nuestro compromiso</p>
+      <h2 id="comp-title" class="h2">Trabajamos para que no corras riesgos.</h2>
+    </div>
+    <ul role="list" class="commit stagger">
+      {items.map((it) => (
+        <li class="card spotlight">
+          <span class="ci"><Icon name={it.icon} size={24} /></span>
+          <h3 class="h3">{it.t}</h3>
+          <p class="muted">{it.d}</p>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .commit { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; 
+  }
+  .commit li { display: flex; flex-direction: column; gap: 12px; }
+  .ci {
+    display: grid; place-items: center; width: 50px; height: 50px; border-radius: 14px;
+    color: var(--secondary); background:
+      radial-gradient(80% 120% at 0% 0%, rgba(255, 186, 75, 0.1), transparent 55%),
+      var(--surface-low);
+  }
+</style>

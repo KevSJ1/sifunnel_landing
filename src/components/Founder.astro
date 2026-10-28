@@ -1,0 +1,39 @@
+---
+import { Image } from 'astro:assets';
+import WaButton from './WaButton.astro';
+import { site } from '../data/site';
+const { name, experience, photo } = site.founder;
+const photos = import.meta.glob<{ default: ImageMetadata }>('../assets/*.{jpg,jpeg,png,webp}');
+const photoKey = photo ? `../assets/${photo}` : null;
+const photoSrc = photoKey && photos[photoKey] ? (await photos[photoKey]()).default : null;
+---
+{name && (
+  <section id="quien" class="section" data-section="fundador" aria-labelledby="founder-title">
+    <div class="container founder">
+      {photoSrc && (
+        <div class="photo reveal reveal--left">
+          <Image src={photoSrc} alt={`${name}, fundador de SiFunnel`} width={520} height={620} loading="lazy" format="webp" />
+        </div>
+      )}
+      <div class="reveal" style="--d:1">
+        <p class="eyebrow">Quién está detrás</p>
+        <h2 id="founder-title" class="h2">Hola, soy {name}, fundador de SiFunnel.</h2>
+        <p class="lead">
+          Creé SiFunnel porque vi a muchos negocios buenos invertir en web, redes y anuncios sin ver clientes, porque nada estaba conectado. Mi trabajo es unir esas piezas con tecnología e inteligencia artificial para que tu negocio crezca sin que tengas que volverte experto.
+          {experience && <> {experience}</>}
+        </p>
+        {site.city && <p class="muted city">{site.city}, Colombia</p>}
+        <WaButton label="Hablar directamente conmigo" message={`Hola ${name}, quiero hablar contigo sobre mi negocio`} service="fundador" />
+      </div>
+    </div>
+  </section>
+)}
+
+<style>
+  .founder { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: clamp(28px, 5vw, 72px); align-items: center; }
+  .founder:not(:has(.photo)) { grid-template-columns: 1fr; max-width: 820px; }
+  .photo img { border-radius: var(--radius-xl); width: 100%; height: auto; border: 1px solid var(--outline-variant); }
+  .lead { margin-block: 18px 24px; }
+  .city { margin-bottom: 20px; }
+  @media (max-width: 860px) { .founder { grid-template-columns: 1fr; } }
+</style>

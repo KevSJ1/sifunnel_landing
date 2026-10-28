@@ -1,0 +1,26 @@
+---
+import Icon from './Icon.astro';
+import { wa } from '../data/site';
+
+interface Props {
+  label: string;
+  message?: string;
+  service?: string;
+  size?: 'md' | 'lg';
+  class?: string;
+  full?: boolean;
+}
+const { label, message, service = 'diagnostico', size = 'md', class: cls, full = false } = Astro.props;
+---
+<a
+  class:list={['btn', 'btn-wa', size === 'lg' && 'btn-lg', cls]}
+  style={full ? 'width:100%' : undefined}
+  href={wa(message)}
+  target="_blank"
+  rel="noopener"
+  data-wa
+  data-service={service}
+>
+  <Icon name="whatsapp" />
+  <span>{label}</span>
+</a>

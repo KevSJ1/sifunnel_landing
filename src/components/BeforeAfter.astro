@@ -1,0 +1,75 @@
+---
+import Icon from './Icon.astro';
+import WaButton from './WaButton.astro';
+const rows = [
+  ['Una web bonita que nadie usa', 'Una web que lleva al cliente a escribirte'],
+  ['Tu competencia aparece primero en Google', 'Tu negocio optimizado para que te encuentren en tu ciudad'],
+  ['Anuncios sin saber qué venden', 'Campañas conectadas a WhatsApp y medidas'],
+  ['Publicar cuando hay tiempo', 'Un calendario de contenido con objetivo'],
+  ['Mensajes en visto por horas', 'Respuesta en segundos, 24/7'],
+  ['“Creo que vendimos bien este mes”', 'Un tablero que te dice de dónde vino cada cliente'],
+];
+---
+<section id="antes-despues" class="section section--alt" data-section="antes-despues" aria-labelledby="ad-title">
+  <div class="container">
+    <div class="section-head section-head--center reveal">
+      <p class="eyebrow">Antes / después</p>
+      <h2 id="ad-title" class="h2">Lo que cambia cuando todo está conectado.</h2>
+    </div>
+
+    <div class="ba" role="table" aria-label="Comparación antes y con SiFunnel">
+      <div class="ba-head" role="row">
+        <span role="columnheader" class="col-before">Antes</span>
+        <span aria-hidden="true"></span>
+        <span role="columnheader" class="col-after">Con SiFunnel</span>
+      </div>
+      {rows.map(([a, b], i) => (
+        <div class="ba-row reveal" role="row" style={`--d:${i}`}>
+          <span role="cell" class="before"><Icon name="x" size={16} /> <span class="strike">{a}</span></span>
+          <span class="arrow" aria-hidden="true"><Icon name="arrow" size={20} /></span>
+          <span role="cell" class="after"><Icon name="check" size={16} /> <span>{b}</span></span>
+        </div>
+      ))}
+    </div>
+
+    <div class="center reveal">
+      <WaButton label="Quiero este cambio" message="Hola, quiero este CAMBIO. Quiero el diagnóstico" />
+    </div>
+  </div>
+</section>
+
+<style>
+  .ba { display: grid; gap: 10px; max-width: 980px; margin-inline: auto; }
+  .ba-head, .ba-row { display: grid; grid-template-columns: 1fr 48px 1fr; align-items: center; gap: 12px; }
+  .ba-head { padding-inline: 20px; font: 700 0.8rem var(--font-body); letter-spacing: 0.08em; text-transform: uppercase; }
+  .col-before { color: var(--outline); }
+  .col-after { color: var(--secondary); }
+  .ba-row > span:not(.arrow) {
+    display: flex; gap: 12px; align-items: flex-start;
+    padding: 18px 20px; border-radius: var(--radius-md); height: 100%;
+  }
+  .before { background: var(--surface-low); color: var(--outline); }
+  .before :global(svg) { flex: none; margin-top: 4px; color: var(--error); opacity: 0.8; }
+  .after {
+    background: linear-gradient(90deg, rgba(65, 229, 117, 0.1), rgba(65, 229, 117, 0.03));
+    border: 1px solid rgba(65, 229, 117, 0.25);
+    color: var(--on-surface); font-weight: 500;
+  }
+  .after :global(svg) { flex: none; margin-top: 4px; color: var(--secondary); }
+  .arrow { display: grid; place-items: center; color: var(--primary); }
+
+  .strike {
+    background: linear-gradient(currentColor, currentColor) no-repeat 0 55% / 0% 1px;
+    transition: background-size 0.8s var(--ease-out) 0.5s;
+  }
+  :global(.reveal.is-in) .strike, :global(html:not(.js)) .strike { background-size: 100% 1px; }
+
+  .center { margin-top: 44px; display: flex; justify-content: center; }
+
+  @media (max-width: 720px) {
+    .ba-head { display: none; }
+    .ba-row { grid-template-columns: 1fr; gap: 6px; }
+    .arrow { transform: rotate(90deg); height: 20px; }
+    .center :global(.btn) { width: 100%; }
+  }
+</style>

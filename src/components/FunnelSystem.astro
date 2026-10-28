@@ -1,0 +1,108 @@
+---
+import { stages } from '../data/site';
+const colors = ['var(--st-atraer)', 'var(--st-convencer)', 'var(--st-convertir)', 'var(--st-medir)'];
+const list = Object.values(stages);
+---
+<section id="sistema" class="section system" data-section="sistema" aria-labelledby="sistema-title">
+  <div class="glow" aria-hidden="true"></div>
+  <div class="container">
+    <div class="section-head reveal">
+      <p class="eyebrow">El sistema SiFunnel</p>
+      <h2 id="sistema-title" class="h2">Un embudo, cuatro etapas, <span class="text-gradient">un solo equipo.</span></h2>
+      <p class="lead">
+        En lugar de venderte servicios sueltos, construimos el camino completo que recorre tu cliente: desde que te encuentra hasta que te compra. Y lo medimos para mejorarlo cada mes.
+      </p>
+    </div>
+
+    <div class="stages-wrap" data-observe>
+    <span class="track" aria-hidden="true"><span class="track-fill"></span></span>
+    <ol class="stages" role="list">
+      {list.map((s, i) => (
+        <li class="stage" style={`--c:${colors[i]}; --i:${i}`}>
+          <span class="stage-node" aria-hidden="true"><span>{String(s.n).padStart(2, '0')}</span></span>
+          <div class="stage-body">
+            <h3 class="h3"><span class="stage-name">{s.name}:</span> {s.tagline}.</h3>
+            <p class="muted">{s.tools}</p>
+          </div>
+          <span class="funnel-slice" aria-hidden="true" style={`--w:${100 - i * 18}%`}></span>
+        </li>
+      ))}
+    </ol>
+    </div>
+
+    <p class="system-close reveal">Puedes empezar por una sola etapa. <strong>Lo importante es que todo quede conectado.</strong></p>
+  </div>
+</section>
+
+<style>
+  .system { overflow: hidden; }
+  .glow {
+    position: absolute; inset: auto -20% -40% -20%; height: 70%;
+    background: radial-gradient(ellipse at center, rgba(148, 125, 255, 0.14), transparent 60%);
+    pointer-events: none;
+  }
+  .lead { margin-top: 18px; }
+
+  .stages-wrap { position: relative; }
+  .stages {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    counter-reset: st;
+  }
+  .track {
+    position: absolute; top: 31px; left: 32px; right: 32px; height: 2px;
+    background: var(--surface-highest); border-radius: 2px; overflow: hidden;
+  }
+  .track-fill {
+    display: block; height: 100%;
+    background: linear-gradient(90deg, var(--st-atraer), var(--st-convencer), var(--st-convertir), var(--st-medir));
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 1.8s var(--ease-out) 0.2s;
+  }
+  .stages-wrap:global(.is-in) .track-fill, :global(html:not(.js)) .track-fill { transform: none; }
+
+  .stage { position: relative; display: flex; flex-direction: column; gap: 22px; }
+  .stage-node {
+    position: relative; z-index: 1;
+    width: 64px; height: 64px; border-radius: 18px;
+    display: grid; place-items: center;
+    background: var(--surface-c);
+    border: 1px solid color-mix(in srgb, var(--c) 55%, transparent);
+    box-shadow: 0 0 0 6px var(--surface), 0 0 34px -8px var(--c);
+    font: 800 1.1rem var(--font-display); color: var(--c);
+    transition: transform 0.6s var(--ease-spring);
+  }
+  :global(.js) .stage-node { opacity: 0; transform: scale(0.6); transition: opacity 0.6s, transform 0.7s var(--ease-spring); transition-delay: calc(0.3s + var(--i) * 0.35s); }
+  :global(.js) .stage-body { opacity: 0; transform: translateY(16px); transition: opacity 0.7s, transform 0.8s var(--ease-out); transition-delay: calc(0.45s + var(--i) * 0.35s); }
+  .stages-wrap:global(.is-in) .stage-node, .stages-wrap:global(.is-in) .stage-body { opacity: 1; transform: none; }
+  .stage:hover .stage-node { transform: translateY(-4px) rotate(-4deg); }
+
+  .stage-name { color: var(--c); }
+  .stage-body .muted { margin-top: 8px; font-size: 0.95rem; }
+
+  .funnel-slice {
+    display: block; height: 6px; width: var(--w);
+    border-radius: 6px; background: var(--c); opacity: 0.85;
+    margin-top: auto;
+    box-shadow: 0 0 20px -2px var(--c);
+  }
+
+  .system-close {
+    margin-top: 56px; padding: 22px 26px;
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(202, 190, 255, 0.2);
+    background: linear-gradient(90deg, rgba(148, 125, 255, 0.1), rgba(65, 229, 117, 0.06));
+    font-size: 1.1rem; text-align: center;
+  }
+
+  @media (max-width: 900px) {
+    .stages { grid-template-columns: 1fr; gap: 28px; padding-left: 0; }
+    .track { top: 32px; bottom: 32px; left: 31px; right: auto; width: 2px; height: auto; }
+    .track-fill { transform: scaleY(0); transform-origin: top; background: linear-gradient(180deg, var(--st-atraer), var(--st-convencer), var(--st-convertir), var(--st-medir)); }
+    .stage { flex-direction: row; align-items: flex-start; gap: 20px; }
+    .stage-node { flex: none; }
+    .funnel-slice { display: none; }
+  }
+</style>
